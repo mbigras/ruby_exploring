@@ -4,8 +4,11 @@
 ## Examples
 
 [Defining methods](./defining_methods.rb)
+[Method arguments](./method_arguments.rb)
 
-Insight: It seems like calling `super` from a method defined in an objects singleton class will call a method in a module extended onto the same object's singleton class.
+## Defining methods
+
+Insight: Calling `super` from a method defined in an object's singleton class will call a method in a module extended onto the same object's singleton class.
 
 Example:
 
@@ -35,3 +38,28 @@ foo in self.singleton_class.included_modules [M, Kernel]
 ```
 
 Weird.
+
+## Method arguments
+
+Insight: Methods arguments can be gathered up in arrays and hashes
+
+```
+ruby <<EOF
+def foo(*args, **opts, &blk)
+	yield(args, opts) if block_given?
+	42
+end
+
+foo('cats', 'and', 'dogs', whaa: 'in a tree', flaps: 'in a hat') do |args, opts|
+	puts "#{args.first} #{opts[:whaa]}"
+end
+
+foo('cats', 'and', 'dogs', whaa: 'in a tree', flaps: 'in a hat') do |args, opts|
+	puts "#{args.last} #{opts[:flaps]}"
+end
+EOF
+cats in a tree
+dogs in a hat
+```
+
+Outrageous.
