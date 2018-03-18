@@ -3,8 +3,8 @@
 
 ## Examples
 
-[Defining methods](./defining_methods.rb)
-[Method arguments](./method_arguments.rb)
+* [Defining methods](./defining_methods.rb)
+* [Method arguments](./method_arguments.rb)
 
 ## Defining methods
 
