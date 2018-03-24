@@ -5,6 +5,7 @@
 
 * [Defining methods](./defining_methods.rb)
 * [Method arguments](./method_arguments.rb)
+* Tap tap tap!
 
 ## Defining methods
 
@@ -63,3 +64,40 @@ dogs in a hat
 ```
 
 Outrageous.
+
+## Tap tap tap!
+
+```
+ri Object#tap
+= Object#tap
+
+(from ruby core)
+------------------------------------------------------------------------------
+  obj.tap {|x| block }    -> obj
+
+------------------------------------------------------------------------------
+
+Yields self to the block, and then returns self. The primary purpose of this
+method is to "tap into" a method chain, in order to perform operations on
+intermediate results within the chain.
+
+  (1..10)                  .tap {|x| puts "original: #{x}" }
+    .to_a                  .tap {|x| puts "array:    #{x}" }
+    .select {|x| x.even? } .tap {|x| puts "evens:    #{x}" }
+    .map {|x| x*x }        .tap {|x| puts "squares:  #{x}" }
+```
+
+The `"tap into"` quotes is what helped this concept click!
+
+```
+ruby <<EOF | tee /dev/tty | pbcopy
+puts %w(foo bar baz)
+.first
+.upcase
+.split("")      .tap { |e| puts "hello #{e}!"}
+.map(&:to_sym)  .tap { |e| puts "hello #{e}!"}
+.clear
+EOF
+hello ["F", "O", "O"]!
+hello [:F, :O, :O]!
+```
