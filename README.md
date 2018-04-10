@@ -9,6 +9,7 @@
 * Strategy pattern
 * Exploring the Rake DSL
 * Extending self
+* The inherited hook
 
 ## Defining methods
 
@@ -196,4 +197,26 @@ EOF
 hello!
 hello!
 hello!
+```
+
+## The inherited hook
+
+```
+ri Class#inherited | awk '/^[A-Z]/ { print; exit }'
+Callback invoked whenever a subclass of the current class is created.
+```
+
+```
+ruby <<EOF
+class C
+end
+
+def C.inherited(sub)
+  puts "Hello #{sub} from #{self}!"
+end
+
+class B < C
+end
+EOF
+Hello B from C!
 ```
