@@ -8,7 +8,7 @@
 * Tap tap tap!
 * Strategy pattern
 * Exploring the Rake DSL
-
+* Extending self
 
 ## Defining methods
 
@@ -176,3 +176,24 @@ I'm one argument: {:default=>[:cats, :dogs]}
 I'm one argument: {:default=>[:test, :features]}
 ```
 
+## Extending self
+
+```
+ruby <<EOF
+module M
+  extend self
+  def foo
+    puts "hello!"
+  end
+end
+M::foo
+M.foo
+
+o = Object.new
+o.extend(M)
+o.foo
+EOF
+hello!
+hello!
+hello!
+```
