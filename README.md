@@ -7,6 +7,8 @@
 * [Method arguments](./method_arguments.rb)
 * Tap tap tap!
 * Strategy pattern
+* Exploring the Rake DSL
+
 
 ## Defining methods
 
@@ -150,3 +152,27 @@ s1: cats...1
 s2: cats...2
 s3: cats...3
 ```
+
+## Exploring the Rake DSL
+
+```
+ruby <<EOF
+def task(h)
+  puts "I'm one argument: #{h.inspect}"
+end
+
+task({ "default" => ["cats", "dogs"]})
+task "default" => ["cats", "dogs"]
+task "default": ["cats", "dogs"]
+task default: ["cats", "dogs"]
+task default: [:cats, :dogs]
+task :default => [:test, :features]
+EOF
+I'm one argument: {"default"=>["cats", "dogs"]}
+I'm one argument: {"default"=>["cats", "dogs"]}
+I'm one argument: {:default=>["cats", "dogs"]}
+I'm one argument: {:default=>["cats", "dogs"]}
+I'm one argument: {:default=>[:cats, :dogs]}
+I'm one argument: {:default=>[:test, :features]}
+```
+
