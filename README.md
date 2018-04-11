@@ -10,6 +10,7 @@
 * Exploring the Rake DSL
 * Extending self
 * The inherited hook
+* Lazy autoload
 
 ## Defining methods
 
@@ -207,7 +208,7 @@ Callback invoked whenever a subclass of the current class is created.
 ```
 
 ```
-ruby <<EOF
+ruby <<'EOF'
 class C
 end
 
@@ -219,4 +220,34 @@ class B < C
 end
 EOF
 Hello B from C!
+```
+
+## Lazy autoload
+
+```
+ruby <<'EOF'
+$LOAD_PATH.unshift('.')
+require 'bar'
+puts 'hello world!'
+Bar.cats
+EOF
+inside bar.rb
+Starting some stuff...
+Finished some stuff...
+hello world!
+running Bar::cats!
+```
+
+```
+ruby <<'EOF'
+$LOAD_PATH.unshift('.')
+autoload :Bar, 'bar'
+puts 'hello world!'
+Bar.cats
+EOF
+hello world!
+inside bar.rb
+Starting some stuff...
+Finished some stuff...
+running Bar::cats!
 ```
