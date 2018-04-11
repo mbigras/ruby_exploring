@@ -3,13 +3,13 @@
 
 ## Examples
 
-* [Defining methods](./defining_methods.rb)
-* [Method arguments](./method_arguments.rb)
-* Tap tap tap!
-* Strategy pattern
-* Exploring the Rake DSL
-* Extending self
-* The inherited hook
+* [Defining methods](#defining-methods)
+* [Method arguments](#method-arguments)
+* [Tap tap tap](#tap-tap-tap)
+* [Strategy pattern](#strategy-pattern)
+* [Exploring the Rake DSL](#exploring-the-rake-dsl)
+* [Extending self](#extending-self)
+* [The inherited hook](#the-inherited-hook)
 * [Lazy autoload](#lazy-autoload)
 
 ## Defining methods
@@ -70,7 +70,7 @@ dogs in a hat
 
 Outrageous.
 
-## Tap tap tap!
+## Tap tap tap
 
 ```
 ri Object#tap
