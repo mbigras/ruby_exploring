@@ -11,6 +11,7 @@
 * [Extending self](#extending-self)
 * [The inherited hook](#the-inherited-hook)
 * [Lazy autoload](#lazy-autoload)
+* [The extended hook](#the-extended-hook)
 
 ## Defining methods
 
@@ -250,4 +251,40 @@ inside bar.rb
 Starting some stuff...
 Finished some stuff...
 running Bar::cats!
+```
+
+## The extended hook
+
+```
+ruby <<'EOF'
+module M
+  def self.extended(base)
+    puts "Hello #{base} from #{self}!"
+  end
+
+  def foo
+    puts "hello from #{self}!"
+  end
+end
+
+module N
+  extend M
+end
+
+class C
+  extend M
+end
+
+o = Object.new.tap {|o| o.extend M }
+
+N.foo
+C.foo
+o.foo
+EOF
+Hello N from M!
+Hello C from M!
+Hello #<Object:0x00007fe72a94f020> from M!
+hello from N!
+hello from C!
+hello from #<Object:0x00007fe72a94f020>!
 ```
