@@ -12,6 +12,8 @@
 * [The inherited hook](#the-inherited-hook)
 * [Lazy autoload](#lazy-autoload)
 * [The extended hook](#the-extended-hook)
+* [What is class_eval](#what-is-class_eval)
+* [A mess of hooks](#a-mess-of-hooks)
 
 ## Defining methods
 
@@ -287,4 +289,88 @@ Hello #<Object:0x00007fe72a94f020> from M!
 hello from N!
 hello from C!
 hello from #<Object:0x00007fe72a94f020>!
+```
+
+## What is class_eval
+
+Seems like yet another way to define methods.
+
+```
+ruby <<'EOF'
+class C
+end
+
+C.class_eval do
+  def foo
+   puts 'hello!'
+  end
+end
+
+one = C.new
+two = C.new
+
+one.instance_eval do
+  def bar
+    puts 'flapjacks!'
+  end
+end
+
+one.foo
+one.bar
+two.foo
+two.bar
+EOF
+hello!
+flapjacks!
+hello!
+-:22:in `<main>': undefined method `bar' for #<C:0x00007fa27e01fa40> (NoMethodError)
+```
+
+## A mess of hooks
+
+```
+ruby <<'EOF'
+module M
+  def self.included(base)
+    puts "hello base #{base} from self #{self}"
+    base.extend ClassMethods
+    base.class_eval do
+      def flap
+        puts 'flap!'
+      end
+    end
+  end
+
+  module ClassMethods
+    def foo
+      puts 'foo!'
+    end
+
+    class << self
+      def extended(other)
+        puts "hello other #{other} from self #{self}"
+      end
+    end
+  end
+
+  def bar
+    puts 'bar!'
+  end
+end
+
+class C
+  include M
+end
+
+C.foo
+
+o = C.new
+o.flap
+o.bar
+EOF
+hello base C from self M
+hello other C from self M::ClassMethods
+foo!
+flap!
+bar!
 ```
