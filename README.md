@@ -10,7 +10,7 @@
 * Exploring the Rake DSL
 * Extending self
 * The inherited hook
-* Lazy autoload
+* [Lazy autoload](#lazy-autoload)
 
 ## Defining methods
 
