@@ -14,6 +14,7 @@
 * [The extended hook](#the-extended-hook)
 * [What is class_eval](#what-is-class_eval)
 * [A mess of hooks](#a-mess-of-hooks)
+* [The class << object syntax](#the-class-<<-object-syntax)
 
 ## Defining methods
 
@@ -373,4 +374,41 @@ hello other C from self M::ClassMethods
 foo!
 flap!
 bar!
+```
+
+## The class << object syntax
+
+Notice how the instance variables live in the instance and the reader methods live in the instance's class.
+
+Not sure how to reach the @baz instance variable though.
+
+```
+ruby <<'EOF'
+class C
+  @foo = 'cats'
+  puts "#{self} instance variables: #{self.instance_variables}"
+end
+
+class << C
+  @bar = 'dogs'
+  puts "#{self} instance variables: #{self.instance_variables}"
+  attr_reader :foo
+end
+
+class << C.singleton_class
+  @baz = 'ants' # how can I reach this?
+  puts "#{self} instance variables: #{self.instance_variables}"
+  attr_reader :bar
+end
+
+puts C.foo
+puts C.singleton_class.bar
+puts C.singleton_class.instance_variable_get(:@baz)
+EOF
+C instance variables: [:@foo]
+#<Class:C> instance variables: [:@bar]
+#<Class:#<Class:C>> instance variables: [:@baz]
+cats
+dogs
+
 ```
