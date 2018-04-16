@@ -15,6 +15,7 @@
 * [What is class_eval](#what-is-class_eval)
 * [A mess of hooks](#a-mess-of-hooks)
 * [The class << object syntax](#the-class-<<-object-syntax)
+* [Yielding self like a gemspec](#yielding-self-like-a-gemspec)
 
 ## Defining methods
 
@@ -412,3 +413,28 @@ cats
 dogs
 
 ```
+
+## Yielding self like a gemspec
+
+```
+ruby <<'EOF'
+class C
+  attr_accessor :foo, :bar, :baz
+  def initialize
+    yield self
+  end
+
+  def to_s
+    "foo=#{foo} bar=#{bar} baz=#{baz}"
+  end
+end
+
+o = C.new do |c|
+  c.foo = 'flea'
+  c.bar = 'bat'
+  c.baz = 'bee'
+end
+
+puts o
+EOF
+foo=flea bar=bat baz=bee
