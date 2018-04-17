@@ -18,6 +18,7 @@
 * [Yielding self like a gemspec](#yielding-self-like-a-gemspec)
 * [View the constants in a module](#view-the-constants-in-a-module)
 * [Mysterious Proc.new](#mysterious-proc.new)
+* [Creating classes on the fly](#creating-classes-on-the-fly)
 
 ## Defining methods
 
@@ -545,3 +546,41 @@ More details at
 * https://stackoverflow.com/questions/21481620/please-explain-me-what-mean-the-expression-proc-new-in-a-ruby-method/49870776#49870776
 * https://mudge.name/2011/01/26/passing-blocks-in-ruby-without-block.html
 * http://confreaks.tv/videos/rubyconf2010-zomg-why-is-this-code-so-slow
+
+## Creating classes on the fly
+
+Rails makes the ActiveRecord::Migration class versioned, how could that work?
+
+```
+ruby <<'EOF'
+class C
+  def self.[] version
+    const_get "V#{version.to_s.tr '.', '_'}"
+  end
+
+  class V1_0
+    def dog
+      puts "dog v1.0..."
+    end
+  end
+
+  class V1_1
+    def dog
+      puts "dog v1.1..."
+    end
+  end
+
+  class V1_2
+    def dog
+      puts "dog v1.2..."
+    end
+  end
+end
+
+%w(1.0 1.1 1.2).each do |v|
+  C[v].new.dog
+end
+EOF
+dog v1.0...
+dog v1.1...
+dog v1.2...
