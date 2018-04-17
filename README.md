@@ -16,6 +16,8 @@
 * [A mess of hooks](#a-mess-of-hooks)
 * [The class << object syntax](#the-class-<<-object-syntax)
 * [Yielding self like a gemspec](#yielding-self-like-a-gemspec)
+* [View the constants in a module](#view-the-constants-in-a-module)
+* [Mysterious Proc.new](#mysterious-proc.new)
 
 ## Defining methods
 
@@ -438,3 +440,108 @@ end
 puts o
 EOF
 foo=flea bar=bat baz=bee
+
+## View the constants in a module
+
+Links
+
+* https://stackoverflow.com/questions/833125/find-classes-available-in-a-module
+* https://stackoverflow.com/questions/49867219/how-does-object-know-about-the-const-get-method
+
+Get a quick sense of the constants in a module (class names are constants)
+
+```
+ruby -r methadone -e 'puts Methadone.constants' | sort
+ARGVParser
+CLILogger
+CLILogging
+Error
+ExecutionStrategy
+ExitNow
+FailedCommandError
+Main
+OptionParserProxy
+ProcessStatus
+SH
+VERSION
+```
+
+To make sure they're classes, select only the classes
+
+```
+ruby -r methadone -e 'puts Methadone.constants.select { |c| Methadone.const_get(c).is_a? Class }' | sort
+CLILogger
+Error
+FailedCommandError
+OptionParserProxy
+ProcessStatus
+```
+
+Same for modules
+
+```
+ruby -r methadone -e 'puts Methadone.constants.select { |c| Methadone.const_get(c).is_a? Module }' | sort
+ARGVParser
+CLILogger
+CLILogging
+Error
+ExecutionStrategy
+ExitNow
+FailedCommandError
+Main
+OptionParserProxy
+ProcessStatus
+SH
+```
+
+## Mysterious Proc.new
+
+https://github.com/rails/rails/blob/375a4143cf5caeb6159b338be824903edfd62836/railties/lib/rails/engine.rb#L532-L538
+
+```
+# Defines the routes for this engine. If a block is given to
+# routes, it is appended to the engine.
+def routes
+  @routes ||= ActionDispatch::Routing::RouteSet.new_with_config(config)
+  @routes.append(&Proc.new) if block_given?
+  @routes
+end
+```
+
+If Proc.new is called from inside a method without any arguments of its own, it will return a new Proc containing the block given to its surrounding method.
+
+```
+def foo
+  Proc.new.call
+end
+
+foo { puts "hello world" }
+# hello world
+```
+
+This means that it is now possible to pass a block between methods without using the &block parameter:
+
+```
+class C
+  def bar
+    puts "called bar..."
+    baz &Proc.new
+  end
+
+  def baz
+    puts "called baz..."
+    yield
+  end
+end
+
+C.new.bar { puts "called block..." }
+# called bar...
+# called baz...
+# called block...
+```
+
+More details at
+
+* https://stackoverflow.com/questions/21481620/please-explain-me-what-mean-the-expression-proc-new-in-a-ruby-method/49870776#49870776
+* https://mudge.name/2011/01/26/passing-blocks-in-ruby-without-block.html
+* http://confreaks.tv/videos/rubyconf2010-zomg-why-is-this-code-so-slow
