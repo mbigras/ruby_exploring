@@ -586,3 +586,46 @@ dog v1.0...
 dog v1.1...
 dog v1.2...
 ```
+
+```
+ruby <<'EOF'
+module M
+  def universal_cat
+    puts 'meow!'
+  end
+
+  class V1_0
+    include M
+
+    def dog
+      puts 'dog v1.0...'
+      self
+    end
+  end
+
+  class V1_1 < V1_0
+    def dog
+      puts 'dog v1.1...'
+      self
+    end
+  end
+
+  class V1_2 < V1_1
+    def dog
+      puts 'dog v1.2...'
+      self
+    end
+  end
+end
+
+%w(V1_0 V1_1 V1_2).each do |v|
+  Object.const_get("M::#{v}").new.dog.universal_cat
+end
+EOF
+dog v1.0...
+meow!
+dog v1.1...
+meow!
+dog v1.2...
+meow!
+```
