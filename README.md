@@ -441,6 +441,7 @@ end
 puts o
 EOF
 foo=flea bar=bat baz=bee
+```
 
 ## View the constants in a module
 
@@ -584,3 +585,4 @@ EOF
 dog v1.0...
 dog v1.1...
 dog v1.2...
+```
