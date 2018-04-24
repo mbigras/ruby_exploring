@@ -19,6 +19,7 @@
 * [View the constants in a module](#view-the-constants-in-a-module)
 * [Mysterious Proc.new](#mysterious-proc.new)
 * [Creating classes on the fly](#creating-classes-on-the-fly)
+* [Instance variables for a Class Object](#instance-variables-for-a-class-object)
 
 ## Defining methods
 
@@ -628,4 +629,48 @@ dog v1.1...
 meow!
 dog v1.2...
 meow!
+```
+
+## Instance variables for a Class Object
+
+Read through an example in net-http-digest_auth and was confused about where the the instance variable was located.
+
+Links
+
+* https://github.com/drbrain/net-http-digest_auth/blob/3b86a3acc17e8a691b1f94e3b9a448287d300c6c/sample/auth_server.rb#L6-L10
+
+```
+ruby <<'EOF'
+class C
+  def self.foo
+    @cats = 42
+  end
+  def self.bar
+    @cats
+  end
+
+  def foo
+    @cats = 'lala'
+  end
+  def bar
+    @cats
+  end
+end
+
+p C.bar
+p C.foo
+p C.bar
+
+o = C.new
+
+p o.bar
+p o.foo
+p o.bar
+EOF
+nil
+42
+42
+nil
+"lala"
+"lala"
 ```
