@@ -20,6 +20,7 @@
 * [Mysterious Proc.new](#mysterious-proc.new)
 * [Creating classes on the fly](#creating-classes-on-the-fly)
 * [Instance variables for a Class Object](#instance-variables-for-a-class-object)
+* [Source location of methods](#source-location-of-methods)
 
 ## Defining methods
 
@@ -673,4 +674,54 @@ nil
 nil
 "lala"
 "lala"
+```
+
+## Source location of methods
+
+Links
+
+* https://tenderlovemaking.com/2016/02/05/i-am-a-puts-debuggerer.html
+
+```
+ruby <<'EOF'
+$LOAD_PATH.unshift '.'
+require 'flappy'
+
+class C
+  include M
+  def cats
+    foo
+  end
+end
+
+C.new.cats
+EOF
+/Projects/github.com/mbigras/ruby_exploring/flappy.rb:15:in `cats': broken in a confusing way (RuntimeError)
+  from /Projects/github.com/mbigras/ruby_exploring/flappy.rb:11:in `baz'
+  from /Projects/github.com/mbigras/ruby_exploring/flappy.rb:7:in `bar'
+  from /Projects/github.com/mbigras/ruby_exploring/flappy.rb:3:in `foo'
+  from -:7:in `cats'
+  from -:11:in `<main>'
+
+ruby <<'EOF'
+$LOAD_PATH.unshift '.'
+require 'flappy'
+
+class C
+  include M
+  def cats
+    p method(:foo).source_location
+    foo
+  end
+end
+
+C.new.cats
+EOF
+["/Projects/github.com/mbigras/ruby_exploring/flappy.rb", 2]
+/Projects/github.com/mbigras/ruby_exploring/flappy.rb:15:in `cats': broken in a confusing way (RuntimeError)
+  from /Projects/github.com/mbigras/ruby_exploring/flappy.rb:11:in `baz'
+  from /Projects/github.com/mbigras/ruby_exploring/flappy.rb:7:in `bar'
+  from /Projects/github.com/mbigras/ruby_exploring/flappy.rb:3:in `foo'
+  from -:8:in `cats'
+  from -:12:in `<main>'
 ```
